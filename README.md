@@ -11,9 +11,9 @@ Customers need to see their transaction history so they can track money coming i
 
 A customer can have more than one account, but each customer account belongs to one customer. I will also include a clearing account for the bank. This gives deposits and withdrawals a second account to record the movement against.
 
-Each transaction will have a unique reference. The ledger will show how that transaction affects the accounts involved. For example, if one customer transfers ₦250 to another, one account loses ₦250 and the other gains ₦250. I will store amounts in kobo so the figures are exact.
+Each transaction will have a unique reference. The ledger will show how that transaction affects the accounts involved. For example, if one customer transfers ₦250 to another, one account loses ₦250 and the other gains ₦250. I will store amounts in kobo so the figures are exact. Both entries on the affected accounts must be saved together, or neither should be saved.
 
-If a recorded transaction needs to be reversed, I will add a new transaction that cancels its effect. I will keep the original transaction so it is still possible to see what happened.
+If a recorded transaction needs to be reversed, I will add a new transaction that cancels its effect. I will keep the original transaction so it is still possible to see what happened. 
 
 ## What I will do in this portfolio
 

@@ -1,0 +1,204 @@
+.read portfolio-1-database-design/schema.sql
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE customers (
+    customer_id INTEGER PRIMARY KEY,
+    full_name TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE accounts (
+    account_id INTEGER PRIMARY KEY,
+    account_number TEXT NOT NULL UNIQUE,
+    customer_id INTEGER REFERENCES customers(customer_id),
+    account_type TEXT NOT NULL CHECK (
+        account_type IN ('customer', 'clearing')
+    ),
+    CHECK (
+        (account_type = 'customer' AND customer_id IS NOT NULL) OR
+        (account_type = 'clearing' AND customer_id IS NULL)
+    )
+);
+
+CREATE TABLE transactions (
+    transaction_id INTEGER PRIMARY KEY,
+    reference TEXT NOT NULL UNIQUE,
+    amount_kobo INTEGER NOT NULL CHECK (amount_kobo > 0),
+    transaction_type TEXT NOT NULL CHECK (
+        transaction_type IN ('deposit', 'withdrawal', 'transfer', 'reversal')
+    ),
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    reversal_of_transaction_id INTEGER UNIQUE
+        REFERENCES transactions(transaction_id),
+    CHECK (
+        (transaction_type = 'reversal'
+            AND reversal_of_transaction_id IS NOT NULL) OR
+        (transaction_type <> 'reversal'
+            AND reversal_of_transaction_id IS NULL)
+    ),
+    CHECK (
+        reversal_of_transaction_id IS NULL OR
+        reversal_of_transaction_id <> transaction_id
+    )
+);
+
+CREATE TABLE ledger_entries (
+    entry_id INTEGER PRIMARY KEY,
+    transaction_id INTEGER NOT NULL
+        REFERENCES transactions(transaction_id),
+    account_id INTEGER NOT NULL
+        REFERENCES accounts(account_id),
+    amount_kobo INTEGER NOT NULL CHECK (amount_kobo <> 0),
+    UNIQUE (transaction_id, account_id)
+);
+
+CREATE TABLE audit_events (
+    audit_event_id INTEGER PRIMARY KEY,
+    transaction_id INTEGER NOT NULL
+        REFERENCES transactions(transaction_id),
+    event_type TEXT NOT NULL CHECK (
+        event_type IN ('posted', 'reversal_posted')
+    ),
+    event_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    details TEXT NOT NULL
+);
+.read portfolio-1-database-design/sample_data.sql
+INSERT INTO customers (customer_id, full_name, email) VALUES
+    (1, 'Ada Okafor', 'ada@example.test'),
+    (2, 'Tunde Ola', 'tunde@example.test');
+
+INSERT INTO accounts (account_id, account_number, customer_id, account_type) VALUES
+    (1, '1000000', 1, 'customer'),
+    (2, '2000000', 2, 'customer'),
+    (3, '300000000', NULL, 'clearing');
+
+-- Ada deposits ₦1,000 (100,000 kobo).
+INSERT INTO transactions
+    (transaction_id, reference, amount_kobo, transaction_type)
+VALUES
+    (1, 'AST-001', 100000, 'deposit');
+
+INSERT INTO ledger_entries
+    (transaction_id, account_id, amount_kobo)
+VALUES
+    (1, 3, -100000),  -- bank clearing account
+    (1, 1,  100000);  -- Ada's account
+
+INSERT INTO audit_events
+    (transaction_id, event_type, details)
+VALUES
+    (1, 'posted', 'Deposit recorded');
+
+-- Ada transfers ₦250 (25,000 kobo) to Tunde.
+INSERT INTO transactions
+    (transaction_id, reference, amount_kobo, transaction_type)
+VALUES
+    (2, 'AST-002', 25000, 'transfer');
+
+INSERT INTO ledger_entries
+    (transaction_id, account_id, amount_kobo)
+VALUES
+    (2, 1, -25000),  -- Ada loses ₦250
+    (2, 2,  25000);  -- Tunde gains ₦250
+
+INSERT INTO audit_events
+    (transaction_id, event_type, details)
+VALUES
+    (2, 'posted', 'Transfer recorded');
+
+-- Tunde withdraws ₦50 (5,000 kobo).
+INSERT INTO transactions
+    (transaction_id, reference, amount_kobo, transaction_type)
+VALUES
+    (3, 'AST-003', 5000, 'withdrawal');
+
+INSERT INTO ledger_entries
+    (transaction_id, account_id, amount_kobo)
+VALUES
+    (3, 2, -5000),  -- Tunde loses ₦50
+    (3, 3,  5000);  -- the clearing account is the other side
+
+INSERT INTO audit_events
+    (transaction_id, event_type, details)
+VALUES
+    (3, 'posted', 'Withdrawal recorded');
+
+-- Reverse withdrawal AST-003.
+INSERT INTO transactions
+    (transaction_id, reference, amount_kobo, transaction_type,
+     reversal_of_transaction_id)
+VALUES
+    (4, 'AST-004', 5000, 'reversal', 3);
+
+INSERT INTO ledger_entries
+    (transaction_id, account_id, amount_kobo)
+VALUES
+    (4, 2,  5000),  -- restore ₦50 to Tunde
+    (4, 3, -5000);  -- reverse the clearing entry
+
+INSERT INTO audit_events
+    (transaction_id, event_type, details)
+VALUES
+    (4, 'reversal_posted', 'Withdrawal AST-003 reversed');
+
+.version
+SQLite 3.41.2 2023-03-22 11:56:21 0d1fc92f94cb6b76bffe3ec34d69cffde2924203304e8ffc4155597af0c191da
+zlib version 1.2.13
+clang-14.0.0
+PRAGMA foreign_keys;
+1
+.tables
+accounts        audit_events    customers       ledger_entries  transactions  
+
+SELECT transaction_id, reference, transaction_type,
+       reversal_of_transaction_id
+FROM transactions
+ORDER BY transaction_id;
+1|AST-001|deposit|
+2|AST-002|transfer|
+3|AST-003|withdrawal|
+4|AST-004|reversal|3
+
+SELECT account_id, SUM(amount_kobo) AS balance_kobo
+FROM ledger_entries
+GROUP BY account_id
+ORDER BY account_id;
+1|75000
+2|25000
+3|-100000
+
+SELECT transaction_id,
+       COUNT(*) AS number_of_entries,
+       SUM(amount_kobo) AS total_kobo
+FROM ledger_entries
+GROUP BY transaction_id
+ORDER BY transaction_id;
+1|2|0
+2|2|0
+3|2|0
+4|2|0
+
+SELECT transaction_id, event_type
+FROM audit_events
+ORDER BY audit_event_id;
+1|posted
+2|posted
+3|posted
+4|reversal_posted
+
+Runtime error near line 29: UNIQUE constraint failed: transactions.reference (19)
+INSERT INTO transactions (reference, amount_kobo, transaction_type)
+VALUES ('AST-001', 100, 'deposit');
+
+Runtime error near line 32: CHECK constraint failed: amount_kobo > 0 (19)
+INSERT INTO transactions (reference, amount_kobo, transaction_type)
+VALUES ('AST-BAD-001', 0, 'deposit');
+
+Runtime error near line 35: CHECK constraint failed: (account_type = 'customer' AND customer_id IS NOT NULL) OR
+        (account_type = 'clearing' AND customer_id IS NULL) (19)
+INSERT INTO accounts (account_number, account_type)
+VALUES ('1000000003', 'customer');
+
+Runtime error near line 38: FOREIGN KEY constraint failed (19)
+INSERT INTO ledger_entries (transaction_id, account_id, amount_kobo)
+VALUES (1, 999, 100);
