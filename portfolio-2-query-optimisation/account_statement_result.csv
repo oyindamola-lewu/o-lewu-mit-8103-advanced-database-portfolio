@@ -1,0 +1,3 @@
+created_at,reference,transaction_type,amount_kobo,running_balance_kobo
+2026-11-06 21:03:23,AST-001,deposit,100000,100000
+2026-11-06 21:03:23,AST-002,transfer,-25000,75000

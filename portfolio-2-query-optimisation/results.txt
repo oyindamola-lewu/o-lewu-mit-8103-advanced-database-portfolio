@@ -1,0 +1,29 @@
+SQLite version: 3.38.4
+Sample results: account 10001 ends at 75000 kobo; reference AST-003 has two entries;
+customer balances are 10001=75000 and 10002=25000 kobo.
+Synthetic benchmark: 5,004 transactions, 10,008 ledger entries, 3 accounts.
+Account statement: median of 20 executions, milliseconds.
+BEFORE INDEX PLAN:
+CO-ROUTINE SUBQUERY 2
+SEARCH a USING COVERING INDEX sqlite_autoindex_accounts_1 (account_number=?)
+SCAN le USING INDEX sqlite_autoindex_ledger_entries_1
+SEARCH t USING INTEGER PRIMARY KEY (rowid=?)
+USE TEMP B-TREE FOR ORDER BY
+SCAN SUBQUERY 2
+BEFORE INDEX MEDIAN: 0.4126 ms
+AFTER INDEX PLAN:
+CO-ROUTINE SUBQUERY 2
+SEARCH a USING COVERING INDEX sqlite_autoindex_accounts_1 (account_number=?)
+SEARCH le USING INDEX idx_ledger_account_transaction (account_id=?)
+SEARCH t USING INTEGER PRIMARY KEY (rowid=?)
+USE TEMP B-TREE FOR ORDER BY
+SCAN SUBQUERY 2
+AFTER INDEX MEDIAN: 0.0059 ms
+BEFORE/AFTER RATIO: 70.24x
+RESULT CHECK: same two statement rows before and after.
+REFERENCE SEARCH PLAN (already has a UNIQUE index):
+SEARCH t USING INDEX sqlite_autoindex_transactions_1 (reference=?)
+SEARCH le USING INDEX sqlite_autoindex_ledger_entries_1 (transaction_id=?)
+SEARCH a USING INTEGER PRIMARY KEY (rowid=?)
+USE TEMP B-TREE FOR ORDER BY
+Limit: timings vary by machine, SQLite version, cache state, and data distribution.
