@@ -3,9 +3,9 @@ INSERT INTO customers (customer_id, full_name, email) VALUES
     (2, 'Tunde Ola', 'tunde@example.test');
 
 INSERT INTO accounts (account_id, account_number, customer_id, account_type) VALUES
-    (1, '1000000', 1, 'customer'),
-    (2, '2000000', 2, 'customer'),
-    (3, '300000000', NULL, 'clearing');
+    (1, '10001', 1, 'customer'),
+    (2, '10002', 2, 'customer'),
+    (3, '90001', NULL, 'clearing');
 
 -- Ada deposits ₦1,000 (100,000 kobo).
 INSERT INTO transactions
