@@ -10,7 +10,7 @@ SCAN le USING INDEX sqlite_autoindex_ledger_entries_1
 SEARCH t USING INTEGER PRIMARY KEY (rowid=?)
 USE TEMP B-TREE FOR ORDER BY
 SCAN SUBQUERY 2
-BEFORE INDEX MEDIAN: 0.4126 ms
+BEFORE INDEX MEDIAN: 0.4201 ms
 AFTER INDEX PLAN:
 CO-ROUTINE SUBQUERY 2
 SEARCH a USING COVERING INDEX sqlite_autoindex_accounts_1 (account_number=?)
@@ -18,8 +18,8 @@ SEARCH le USING INDEX idx_ledger_account_transaction (account_id=?)
 SEARCH t USING INTEGER PRIMARY KEY (rowid=?)
 USE TEMP B-TREE FOR ORDER BY
 SCAN SUBQUERY 2
-AFTER INDEX MEDIAN: 0.0059 ms
-BEFORE/AFTER RATIO: 70.24x
+AFTER INDEX MEDIAN: 0.0060 ms
+BEFORE/AFTER RATIO: 70.27x
 RESULT CHECK: same two statement rows before and after.
 REFERENCE SEARCH PLAN (already has a UNIQUE index):
 SEARCH t USING INDEX sqlite_autoindex_transactions_1 (reference=?)
