@@ -1,0 +1,21 @@
+{
+  "customer:1": {
+    "customer_id": 1,
+    "full_name": "Ada Okafor",
+    "email": "ada@example.test",
+    "notification_preferences": {
+      "email": true,
+      "sms": false
+    }
+  },
+  "customer:2": {
+    "customer_id": 2,
+    "full_name": "Tunde Ola",
+    "email": "tunde@example.test",
+    "notification_preferences": {
+      "email": true,
+      "sms": true
+    },
+    "preferred_language": "English"
+  }
+}

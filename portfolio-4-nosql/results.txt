@@ -1,0 +1,7 @@
+Stored keys: customer:1, customer:2
+Read customer:1: Ada Okafor
+Ada SMS alerts before update: False
+Ada SMS alerts after update: True
+Read customer:2: Tunde Ola
+Tunde preferred language: English
+Read customer:3: not found
