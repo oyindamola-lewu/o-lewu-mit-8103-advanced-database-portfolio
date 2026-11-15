@@ -79,12 +79,12 @@ I separated customer, account, transaction, and ledger facts so the same details
 
 ## Implementation and evidence
 
-I defined the tables in `schema.sql` and added deposit, transfer, withdrawal, and reversal operations in `sample_data.sql`. I used `checks.sql` to load them into an in-memory SQLite database, after which it inspected the tables and transactions, calculated balances, and totaled the entries for each transaction. The console output is saved in `results.txt`.
+I defined the tables in `Lewu_Oyindamola_P1Schema.sql` and added deposit, transfer, withdrawal, and reversal operations in `Lewu_Oyindamola_P1SampleData.sql`. I used `Lewu_Oyindamola_P1Checks.sql` to load them into an in-memory SQLite database, after which it inspected the tables and transactions, calculated balances, and totaled the entries for each transaction. The console output is saved in `Lewu_Oyindamola_P1Results.txt`.
 
 To repeat the checks from the repository root:
 
 ```sh
-sqlite3 :memory: < portfolio-1-database-design/checks.sql
+sqlite3 :memory: < portfolio-1-database-design/Lewu_Oyindamola_P1Checks.sql
 ```
 
 The sample output shows Ada at 75,000 kobo (₦750), Tunde at 25,000 kobo (₦250), and the clearing account at -100,000 kobo (-₦1,000). Each sample transaction has two entries whose total is zero. The final four error messages deliberately try a duplicate reference, a zero transaction amount, a customer account without an owner, and a ledger entry for a nonexistent account. SQLite rejects each invalid insert attempt.

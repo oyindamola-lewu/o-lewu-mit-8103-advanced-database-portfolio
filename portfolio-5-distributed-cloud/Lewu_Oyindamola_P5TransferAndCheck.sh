@@ -5,12 +5,12 @@ HERE=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 USER_NAME=$(id -un)
 QUERY="SELECT account_number, SUM(amount_kobo) AS balance_kobo FROM aster_demo.ledger_entries GROUP BY account_number ORDER BY account_number;"
 
-sh "$HERE/start-replica.sh"
+sh "$HERE/Lewu_Oyindamola_P5StartReplica.sh"
 
 printf '\nBEFORE TRANSFER - PRIMARY\n'
 psql -h 127.0.0.1 -p 55432 -U "$USER_NAME" -d postgres -c "$QUERY"
 
-psql -h 127.0.0.1 -p 55432 -U "$USER_NAME" -d postgres -v ON_ERROR_STOP=1 -f "$HERE/transfer.sql" >/dev/null
+psql -h 127.0.0.1 -p 55432 -U "$USER_NAME" -d postgres -v ON_ERROR_STOP=1 -f "$HERE/Lewu_Oyindamola_P5Transfer.sql" >/dev/null
 
 attempt=0
 replica_count=0

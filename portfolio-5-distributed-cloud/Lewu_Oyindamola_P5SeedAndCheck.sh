@@ -5,8 +5,8 @@ HERE=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 USER_NAME=$(id -un)
 QUERY="SELECT a.account_number, a.account_name, SUM(l.amount_kobo) AS balance_kobo FROM aster_demo.accounts a JOIN aster_demo.ledger_entries l USING (account_number) GROUP BY a.account_number, a.account_name ORDER BY a.account_number;"
 
-sh "$HERE/start-replica.sh"
-psql -h 127.0.0.1 -p 55432 -U "$USER_NAME" -d postgres -v ON_ERROR_STOP=1 -f "$HERE/create-aster-data.sql" >/dev/null
+sh "$HERE/Lewu_Oyindamola_P5StartReplica.sh"
+psql -h 127.0.0.1 -p 55432 -U "$USER_NAME" -d postgres -v ON_ERROR_STOP=1 -f "$HERE/Lewu_Oyindamola_P5CreateAsterData.sql" >/dev/null
 
 attempt=0
 replica_count=0

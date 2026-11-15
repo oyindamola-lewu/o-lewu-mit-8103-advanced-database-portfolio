@@ -1,4 +1,4 @@
-"""Run Portfolio 2 from the repository root: python3 portfolio-2-query-optimisation/run_evidence.py"""
+"""Run Portfolio 2 from the repository root: python3 portfolio-2-query-optimisation/Lewu_Oyindamola_P2RunEvidence.py"""
 import csv
 from pathlib import Path
 import sqlite3
@@ -16,8 +16,8 @@ def read_sql(name):
 def new_db():
     db = sqlite3.connect(':memory:')
     db.execute('PRAGMA foreign_keys = ON')
-    db.executescript((P1 / 'schema.sql').read_text())
-    db.executescript((P1 / 'sample_data.sql').read_text())
+    db.executescript((P1 / 'Lewu_Oyindamola_P1Schema.sql').read_text())
+    db.executescript((P1 / 'Lewu_Oyindamola_P1SampleData.sql').read_text())
     return db
 
 
@@ -47,9 +47,9 @@ def median_ms(db, sql, repetitions=20):
 
 def main():
     db = new_db()
-    statement = save_result(db, 'account_statement.sql', 'account_statement_result.csv')
-    reference = save_result(db, 'transaction_by_reference.sql', 'transaction_by_reference_result.csv')
-    balances = save_result(db, 'balance_check.sql', 'balance_check_result.csv')
+    statement = save_result(db, 'Lewu_Oyindamola_P2AccountStatement.sql', 'Lewu_Oyindamola_P2AccountStatementResult.csv')
+    reference = save_result(db, 'Lewu_Oyindamola_P2TransactionByReference.sql', 'Lewu_Oyindamola_P2TransactionByReferenceResult.csv')
+    balances = save_result(db, 'Lewu_Oyindamola_P2BalanceCheck.sql', 'Lewu_Oyindamola_P2BalanceCheckResult.csv')
     assert [row[-1] for row in statement] == [100000, 75000]
     assert [row[3] for row in reference] == ['10002', '90001']
     assert [(row[0], row[2]) for row in balances] == [('10001', 75000), ('10002', 25000)]
@@ -69,11 +69,11 @@ def main():
     )
     db.commit()
 
-    statement_sql = read_sql('account_statement.sql')
+    statement_sql = read_sql('Lewu_Oyindamola_P2AccountStatement.sql')
     before_plan = plan(db, statement_sql)
     before_rows = db.execute(statement_sql).fetchall()
     before_ms = median_ms(db, statement_sql)
-    db.executescript(read_sql('index_account_statement.sql'))
+    db.executescript(read_sql('Lewu_Oyindamola_P2IndexAccountStatement.sql'))
     after_plan = plan(db, statement_sql)
     after_rows = db.execute(statement_sql).fetchall()
     after_ms = median_ms(db, statement_sql)
@@ -94,12 +94,12 @@ def main():
         f'BEFORE/AFTER RATIO: {before_ms / after_ms:.2f}x',
         'RESULT CHECK: same two statement rows before and after.',
         'REFERENCE SEARCH PLAN (already has a UNIQUE index):',
-        *plan(db, read_sql('transaction_by_reference.sql')),
+        *plan(db, read_sql('Lewu_Oyindamola_P2TransactionByReference.sql')),
         'Limit: timings vary by machine, SQLite version, cache state, and data distribution.',
     ]
-    (HERE / 'results.txt').write_text('\n'.join(lines) + '\n')
+    (HERE / 'Lewu_Oyindamola_P2Results.txt').write_text('\n'.join(lines) + '\n')
     print('\n'.join(lines))
-    print('\nSaved three CSV result files and results.txt')
+    print('\nSaved three CSV result files and Lewu_Oyindamola_P2Results.txt')
 
 
 if __name__ == '__main__':

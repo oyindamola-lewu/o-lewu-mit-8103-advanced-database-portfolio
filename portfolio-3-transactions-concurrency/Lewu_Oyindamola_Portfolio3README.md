@@ -4,11 +4,11 @@ I used the Aster Bank database from Portfolio 1 to test commit, rollback, and tw
 
 ## Commit
 
-I ran `commit-transfer.sql` to move ₦100 from Ada's account (`10001`) to Tunde's account (`10002`). The transaction record and both ledger entries were placed between `BEGIN TRANSACTION` and `COMMIT`. Ada's balance changed from 75,000 to 65,000 kobo. Tunde's changed from 25,000 to 35,000 kobo. This shows that the transfer was saved.
+I ran `Lewu_Oyindamola_P3CommitTransfer.sql` to move ₦100 from Ada's account (`10001`) to Tunde's account (`10002`). The transaction record and both ledger entries were placed between `BEGIN TRANSACTION` and `COMMIT`. Ada's balance changed from 75,000 to 65,000 kobo. Tunde's changed from 25,000 to 35,000 kobo. This shows that the transfer was saved.
 
 ## Rollback
 
-I ran `rollback-transfer.sql` to start a ₦200 transfer, then used `ROLLBACK` instead of `COMMIT`. The balances stayed at 65,000 and 35,000 kobo. The script also showed that the cancelled transaction reference was not saved.
+I ran `Lewu_Oyindamola_P3RollbackTransfer.sql` to start a ₦200 transfer, then used `ROLLBACK` instead of `COMMIT`. The balances stayed at 65,000 and 35,000 kobo. The script also showed that the cancelled transaction reference was not saved.
 
 ## Two connections
 

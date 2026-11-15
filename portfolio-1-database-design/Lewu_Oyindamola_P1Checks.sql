@@ -1,5 +1,5 @@
-.read portfolio-1-database-design/schema.sql
-.read portfolio-1-database-design/sample_data.sql
+.read portfolio-1-database-design/Lewu_Oyindamola_P1Schema.sql
+.read portfolio-1-database-design/Lewu_Oyindamola_P1SampleData.sql
 
 .version
 PRAGMA foreign_keys;

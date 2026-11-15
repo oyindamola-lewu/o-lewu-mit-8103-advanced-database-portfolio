@@ -5,7 +5,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 FOLDER = Path(__file__).resolve().parent
-profiles = json.loads((FOLDER / 'customer_profiles.json').read_text())
+profiles = json.loads((FOLDER / 'Lewu_Oyindamola_P4CustomerProfiles.json').read_text())
 lines = []
 
 with TemporaryDirectory() as temporary_folder:
@@ -33,5 +33,5 @@ with TemporaryDirectory() as temporary_folder:
         lines.append('Read customer:3: ' + ('not found' if missing is None else 'found'))
 
 output = '\n'.join(lines) + '\n'
-(FOLDER / 'results.txt').write_text(output)
+(FOLDER / 'Lewu_Oyindamola_P4Results.txt').write_text(output)
 print(output, end='')

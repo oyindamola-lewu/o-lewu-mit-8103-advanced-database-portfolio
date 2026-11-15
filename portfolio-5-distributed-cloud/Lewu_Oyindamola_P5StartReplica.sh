@@ -8,7 +8,7 @@ PRIMARY_PORT=55432
 REPLICA_PORT=55433
 USER_NAME=$(id -un)
 
-sh "$HERE/start-primary.sh"
+sh "$HERE/Lewu_Oyindamola_P5StartPrimary.sh"
 
 if [ ! -f "$DATA/PG_VERSION" ]; then
     if [ -e "$DATA" ]; then
