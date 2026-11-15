@@ -1,0 +1,25 @@
+SQLite 3.41.2 2023-03-22 11:56:21 0d1fc92f94cb6b76bffe3ec34d69cffde2924203304e8ffc4155597af0c191da
+zlib version 1.2.13
+clang-14.0.0
+1
+accounts        audit_events    customers       ledger_entries  transactions
+1|AST-001|deposit|
+2|AST-002|transfer|
+3|AST-003|withdrawal|
+4|AST-004|reversal|3
+1|75000
+2|25000
+3|-100000
+1|2|0
+2|2|0
+3|2|0
+4|2|0
+1|posted
+2|posted
+3|posted
+4|reversal_posted
+Runtime error near line 29: UNIQUE constraint failed: transactions.reference (19)
+Runtime error near line 32: CHECK constraint failed: amount_kobo > 0 (19)
+Runtime error near line 35: CHECK constraint failed: (account_type = 'customer' AND customer_id IS NOT NULL) OR
+        (account_type = 'clearing' AND customer_id IS NULL) (19)
+Runtime error near line 38: FOREIGN KEY constraint failed (19)

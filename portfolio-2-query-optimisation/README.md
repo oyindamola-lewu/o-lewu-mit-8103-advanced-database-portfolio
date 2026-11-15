@@ -10,7 +10,7 @@ I saved the results of these queries in the three CSV files in this folder. The 
 
 I then checked the plan for Ada's account statement with SQLite's `EXPLAIN QUERY PLAN`. Before I added an index, SQLite scanned the ledger entries. I created the index in `index_account_statement.sql` and ran the query again. SQLite then used the index to find Ada's entries. The result stayed the same, but the query ran faster in this test.
 
-I added 5,000 fictional deposits to Tunde's account for the speed test. Each deposit has one positive entry for Tunde and one negative entry for the bank's clearing account. Ada's account still has only two entries. The plans and timings are saved in `results.txt`. The exact timings may differ on another computer.
+I added 5,000 fictional deposits to Tunde's account for the speed test. Each deposit has one positive entry for Tunde and one negative entry for the bank's clearing account. The plans and timings are saved in `results.txt`, but the exact timings may differ on another computer.
 
 To repeat the work from the repository folder, run:
 

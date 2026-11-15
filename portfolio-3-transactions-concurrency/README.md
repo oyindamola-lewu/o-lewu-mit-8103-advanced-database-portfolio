@@ -15,5 +15,3 @@ I ran `rollback-transfer.sql` to start a ₦200 transfer, then used `ROLLBACK` i
 I opened the same SQLite database in two Terminal windows. In Terminal A, I used `BEGIN IMMEDIATE` and inserted an audit event without committing it. Terminal B counted the event and got `0`, because A had not committed. B then tried `BEGIN IMMEDIATE` and got `database is locked`, because A held the write lock. After I used `COMMIT` in A, B counted again and got `1`.
 
 This showed that one connection could not see another connection's unfinished change, and that SQLite allowed only one writer at a time. My Terminal screenshots show the commands and results.
-
-`aster_demo.db` is the working database made from Portfolio 1's `schema.sql` and `sample_data.sql`. The SQL files show the commit and rollback examples. The concurrency test was entered directly in the two Terminal windows.
